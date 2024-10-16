@@ -7,6 +7,7 @@ from .models import User, Subscription
 from .forms import RegistrationForm, LoginForm
 from django.contrib import messages
 
+
 # Регистрация
 def register_view(request):
     if request.method == 'POST':
@@ -15,10 +16,11 @@ def register_view(request):
             user = form.save()
             login(request, user)
             messages.success(request, "Регистрация прошла успешно!")
-            return redirect('home')
+            return redirect('login')
     else:
         form = RegistrationForm()
     return render(request, 'registration/register.html', {'form': form})
+
 
 # Вход
 def login_view(request):
@@ -31,18 +33,21 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, "Вы вошли в систему.")
-                return redirect('profile')
+                return redirect('home')
             else:
                 messages.error(request, "Неверные данные для входа.")
     else:
         form = LoginForm()
     return render(request, 'registration/login.html', {'form': form})
 
+
 # Выход
 def logout_view(request):
     logout(request)
     messages.success(request, "Вы вышли из системы.")
     return redirect('login')
+
+
 
 # Профиль пользователя
 @login_required
@@ -56,6 +61,7 @@ def profile_view(request):
         'subscription': subscription,
         'days_left': subscription.days_left() if subscription else None,
     })
+
 
 # Просмотр подписки
 @login_required

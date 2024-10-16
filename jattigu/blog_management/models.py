@@ -31,13 +31,13 @@ class BlogPost(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    category = models.ForeignKey('BlogCategory', on_delete=models.CASCADE, related_name='posts')
+    category = models.ForeignKey('BlogCategory', on_delete=models.SET_NULL, null=True, blank=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blog_posts')
 
     # Дополнительные атрибуты
-    is_published = models.BooleanField(default=False, help_text="Флаг, указывающий, опубликован ли пост")
+#   is_published = models.BooleanField(default=False, help_text="Флаг, указывающий, опубликован ли пост")
     published_at = models.DateTimeField(null=True, blank=True, help_text="Дата и время публикации поста")
-    tags = models.ManyToManyField('Tag', blank=True, related_name='blog_posts')
+#    tags = models.ManyToManyField('Tag', blank=True, related_name='blog_posts')
 
     def publish(self):
         """Опубликовать пост и установить дату публикации."""
@@ -51,16 +51,16 @@ class BlogPost(models.Model):
         self.published_at = None
         self.save()
 
-    def get_tags(self):
-        """Возвращает список тегов, связанных с постом."""
-        return self.tags.all()
+    # def get_tags(self):
+    #     """Возвращает список тегов, связанных с постом."""
+    #     return self.tags.all()
 
     def __str__(self):
         return self.title
 
 
-class Tag(models.Model):
-    name = models.CharField(max_length=30)
-
-    def __str__(self):
-        return self.name
+# class Tag(models.Model):
+#     name = models.CharField(max_length=30)
+#
+#     def __str__(self):
+#         return self.name
