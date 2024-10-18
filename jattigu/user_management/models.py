@@ -3,6 +3,7 @@ from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.models import AbstractUser
 
+
 class User(AbstractUser):
     # Атрибуты личной информации
     full_name = models.CharField(max_length=100, blank=True)
@@ -68,3 +69,4 @@ class Subscription(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.type} Subscription"
+
