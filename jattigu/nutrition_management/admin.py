@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import FoodItem, NutritionCategory, Nutrition
 
-# Register your models here.
+admin.site.register(FoodItem)
+admin.site.register(NutritionCategory)
+admin.site.register(Nutrition)

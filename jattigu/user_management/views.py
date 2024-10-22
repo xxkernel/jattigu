@@ -16,7 +16,9 @@ def register_view(request):
             user = form.save()
             login(request, user)
             messages.success(request, "Регистрация прошла успешно!")
-            return redirect('login')
+            return redirect('login')  # Redirect to the login page or home page
+        else:
+            messages.error(request, "Ошибка при регистрации. Проверьте введенные данные.")
     else:
         form = RegistrationForm()
     return render(request, 'registration/register.html', {'form': form})
@@ -27,9 +29,9 @@ def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            user = authenticate(request, username=username, password=password)
+            user = authenticate(request, email=email, password=password)
             if user is not None:
                 login(request, user)
                 messages.success(request, "Вы вошли в систему.")
