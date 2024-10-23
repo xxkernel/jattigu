@@ -3,20 +3,46 @@
 {% block title %}Blog Posts{% endblock %}
 
 {% block content %}
-    <h1>Blog Posts</h1>
+<h1>Blog Posts</h1>
 
-    {% if posts %}
-        <ul>
-            {% for post in posts %}
-                <li>
-                    <a href="{% url 'blog_post_detail' post.pk %}">{{ post.title }}</a> <!-- Link to post detail -->
-                    <p>{{ post.created_at|date:"F j, Y" }}</p> <!-- Display the post creation date -->
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No published posts available.</p> <!-- Message when no posts are available -->
-    {% endif %}
+<!-- Кнопка для создания нового поста -->
+<a href="{% url 'create_blog_post' %}" class="btn btn-primary">Create a Post</a>
 
-    <a href="{% url 'create_blog_post' %}">Create a New Blog Post</a> <!-- Link to create a new post -->
+<!-- Форма фильтрации -->
+<form method="get" action="{% url 'blog_post_list' %}">
+    <label for="category">Filter by Category:</label>
+    <select name="category" id="category">
+        <option value="">All Categories</option>
+        {% for category in categories %}
+            <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+                {{ category.name }}
+            </option>
+        {% endfor %}
+    </select>
+    <button type="submit">Filter</button>
+
+
+    <label for="search">Search:</label>
+    <input type="text" name="search" id="search" value="{{ request.GET.search|default_if_none:'' }}">
+
+    <button type="submit">Apply Filters</button>
+</form>
+
+<hr>
+
+<!-- Список постов блога -->
+{% if posts %}
+    <ul>
+        {% for post in posts %}
+            <li>
+                <h2><a href="{% url 'blog_post_detail' post.pk %}">{{ post.title }}</a></h2>
+                <p>Category: {{ post.category.name }}</p>
+                <p>{{ post.published_at|date:"F j, Y" }}</p>
+                <p>{{ post.content|truncatewords:30 }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No blog posts found matching the criteria.</p>
+{% endif %}
 {% endblock %}
